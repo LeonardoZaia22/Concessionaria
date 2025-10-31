@@ -29,13 +29,12 @@
                 <p>Descubra a beleza atemporal dos carros clássicos. Nossa concessionária especializada oferece os veículos mais icônicos dos anos 60, 70 e 80, cuidadosamente restaurados e preservados.</p>
                 <div class="hero-buttons">
                     <a href="login.php" class="btn-primary">Acessar Acervo</a>
-                    <a href="#sobre" class="btn-secondary">Saiba Mais</a>
                 </div>
             </div>
             <div class="hero-image">
                 <div class="car-slider">
                     <div class="car-slide active">
-                        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Carro clássico">
+                        <img src="img/img01.webp" alt="Carro clássico">
                     </div>
                 </div>
             </div>
@@ -56,7 +55,7 @@
                         </ul>
                     </div>
                     <div class="about-image">
-                        <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Oficina de restauração">
+                        <img src="img/img02.jpg" alt="Oficina de restauração">
                     </div>
                 </div>
             </div>
@@ -68,7 +67,7 @@
                 <div class="car-grid">
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Fusca">
+                            <img src="img/img03.jpg" alt="Fusca">
                         </div>
                         <div class="car-info">
                             <h3>Volkswagen Fusca 1975</h3>
@@ -77,7 +76,7 @@
                     </div>
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Opala">
+                            <img src="img/img04.jpeg" alt="Opala">
                         </div>
                         <div class="car-info">
                             <h3>Chevrolet Opala 1982</h3>
@@ -86,7 +85,7 @@
                     </div>
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fpt.wikipedia.org%2Fwiki%2FChevrolet_Opala&psig=AOvVaw3gdhirR9bAXZ7BThsb5cUG&ust=1760797915739000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCPjj1tS5q5ADFQAAAAAdAAAAABAE" alt="Maverick">
+                            <img src="img/img05.jpg" alt="Maverick">
                         </div>
                         <div class="car-info">
                             <h3>Ford Maverick 1974</h3>

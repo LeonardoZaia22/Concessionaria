@@ -634,3 +634,85 @@ h2 {
         grid-template-columns: 1fr;
     }
 }
+
+
+
+/* Adicionar estas regras ao final do arquivo style.css */
+
+/* Melhorias para formulários */
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Melhorias para cards de carro */
+.car-details {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--bg-dark);
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.car-details p {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+}
+
+/* Botões responsivos */
+.btn-primary, .btn-secondary {
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* Melhorias de responsividade */
+@media (max-width: 480px) {
+    .login-form-container {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+    
+    .painel-card {
+        padding: 1.5rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .car-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Estados de loading para botões */
+.btn-primary:disabled {
+    background-color: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Animações suaves */
+.car-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.car-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}

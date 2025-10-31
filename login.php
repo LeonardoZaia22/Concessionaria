@@ -26,6 +26,12 @@
             <h1>Acesse sua conta</h1>
             <p>Entre para visualizar nosso acervo completo de carros clássicos</p>
             
+            <?php if(isset($_GET['erro'])): ?>
+                <div class="alert alert-success" style="background-color: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);">
+                    E-mail ou senha incorretos!
+                </div>
+            <?php endif; ?>
+            
             <form action="processalogin.php" method="POST" class="login-form">
                 <div class="form-group">
                     <label for="email">E-mail</label>
@@ -39,10 +45,6 @@
                 
                 <button type="submit" class="btn-primary btn-full">Entrar</button>
             </form>
-            
-            <div class="login-footer">
-                <p>Não tem uma conta? <a href="#">Entre em contato conosco</a></p>
-            </div>
         </div>
     </main>
 

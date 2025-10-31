@@ -1,23 +1,18 @@
 <?php
-    session_start();
+session_start();
 
-    if((!isset($_SESSION['id'])) and (!isset($_SESSION['email'])) and (!isset($_SESSION['nome']))){
-        unset(
-            $_SESSION['id'],
-            $_SESSION['nome'],
-            $_SESSION['email']
-        );
+if((!isset($_SESSION['id'])) and (!isset($_SESSION['email'])) and (!isset($_SESSION['nome']))){
+    header('location: index.php');
+    exit();
+}
 
-        header('location: index.php');
-    }
+include_once 'conexao.php';
 
-    include_once 'conexao.php';
-    
-    // Buscar carros do banco de dados
-    $consulta_carros = "SELECT * FROM carros";
-    $stmt_carros = $pdo->prepare($consulta_carros);
-    $stmt_carros->execute();
-    $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
+// Buscar TODOS os carros ativos
+$consulta_carros = "SELECT * FROM carros WHERE ativo = 1 ORDER BY destaque DESC, id DESC";
+$stmt_carros = $pdo->prepare($consulta_carros);
+$stmt_carros->execute();
+$carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -36,8 +31,11 @@
                     <a href="restrita.php">Classic Motors</a>
                 </div>
                 <div class="nav-menu">
-                    <a href="restrita.php" class="nav-link">Início</a>
+                    <a href="restrita.php" class="nav-link active">Início</a>
                     <a href="#acervo" class="nav-link">Acervo</a>
+                    <?php if($_SESSION['nivel'] === 'admin'): ?>
+                    <a href="admin_carros.php" class="nav-link">Gerenciar Carros</a>
+                    <?php endif; ?>
                     <a href="painel.php" class="nav-link">Painel</a>
                     <a href="logout.php" class="nav-link logout-btn">Sair</a>
                 </div>
@@ -50,17 +48,22 @@
             <div class="container">
                 <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?>!</h1>
                 <p>Explore nosso acervo completo de carros clássicos</p>
+                <?php if($_SESSION['nivel'] === 'admin'): ?>
+                <div style="margin-top: 20px;">
+                    <a href="admin_carros.php" class="btn-primary">Gerenciar Carros</a>
+                </div>
+                <?php endif; ?>
             </div>
         </section>
 
         <section id="acervo" class="acervo-section">
             <div class="container">
-                <h2>Nosso Acervo</h2>
+                <h2>Nosso Acervo Completo</h2>
                 <div class="car-grid">
                     <?php foreach($carros as $carro): ?>
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="<?php echo $carro['modelo']; ?>">
+                            <img src="img/carros/<?php echo $carro['imagem']; ?>" alt="<?php echo $carro['modelo']; ?>" onerror="this.src='img/carros/default.jpg'">
                             <?php if($carro['destaque']): ?>
                                 <span class="destaque-badge">Destaque</span>
                             <?php endif; ?>
@@ -69,11 +72,27 @@
                             <h3><?php echo $carro['marca'] . ' ' . $carro['modelo'] . ' ' . $carro['ano']; ?></h3>
                             <p class="car-price">R$ <?php echo number_format($carro['preco'], 2, ',', '.'); ?></p>
                             <p class="car-description"><?php echo $carro['descricao']; ?></p>
-                            <button class="btn-secondary btn-small">Mais Informações</button>
+                            <div class="car-details">
+                                <p><strong>Combustível:</strong> <?php echo $carro['combustivel'] ?? 'Gasolina'; ?></p>
+                                <p><strong>Câmbio:</strong> <?php echo $carro['cambio'] ?? 'Manual'; ?></p>
+                                <p><strong>Cor:</strong> <?php echo $carro['cor'] ?? 'Não informada'; ?></p>
+                                <?php if($carro['quilometragem']): ?>
+                                <p><strong>Quilometragem:</strong> <?php echo number_format($carro['quilometragem'], 0, '', '.'); ?> km</p>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
+                
+                <?php if(count($carros) === 0): ?>
+                <div class="text-center">
+                    <p>Nenhum carro cadastrado no momento.</p>
+                    <?php if($_SESSION['nivel'] === 'admin'): ?>
+                    <a href="admin_carros.php" class="btn-primary">Adicionar Primeiro Carro</a>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
             </div>
         </section>
 

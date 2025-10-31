@@ -1,49 +1,44 @@
 <?php
-    session_start();
+session_start();
 
-    if((!isset($_SESSION['id'])) and (!isset($_SESSION['email'])) and (!isset($_SESSION['nome']))){
-        unset(
-            $_SESSION['id'],
-            $_SESSION['nome'],
-            $_SESSION['email']
-        );
+if((!isset($_SESSION['id'])) and (!isset($_SESSION['email'])) and (!isset($_SESSION['nome']))){
+    header('location: index.php');
+    exit();
+}
 
-        header('location: index.php');
-    }
+include_once 'conexao.php';
 
-    include_once 'conexao.php';
+// Buscar dados do usuário
+$user_id = $_SESSION['id'];
+$consulta_usuario = "SELECT * FROM usuarios WHERE id = :id";
+$stmt_usuario = $pdo->prepare($consulta_usuario);
+$stmt_usuario->bindParam(':id', $user_id);
+$stmt_usuario->execute();
+$usuario = $stmt_usuario->fetch(PDO::FETCH_ASSOC);
+
+// Processar atualização do perfil
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nome = $_POST['nome'];
+    $telefone = $_POST['telefone'];
+    $endereco = $_POST['endereco'];
     
-    // Buscar dados do usuário
-    $user_id = $_SESSION['id'];
-    $consulta_usuario = "SELECT * FROM usuarios WHERE id = :id";
-    $stmt_usuario = $pdo->prepare($consulta_usuario);
-    $stmt_usuario->bindParam(':id', $user_id);
-    $stmt_usuario->execute();
-    $usuario = $stmt_usuario->fetch(PDO::FETCH_ASSOC);
+    $atualizar_usuario = "UPDATE usuarios SET nome = :nome, telefone = :telefone, endereco = :endereco WHERE id = :id";
+    $stmt_atualizar = $pdo->prepare($atualizar_usuario);
+    $stmt_atualizar->bindParam(':nome', $nome);
+    $stmt_atualizar->bindParam(':telefone', $telefone);
+    $stmt_atualizar->bindParam(':endereco', $endereco);
+    $stmt_atualizar->bindParam(':id', $user_id);
     
-    // Processar atualização do perfil
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $nome = $_POST['nome'];
-        $telefone = $_POST['telefone'];
-        $endereco = $_POST['endereco'];
-        
-        $atualizar_usuario = "UPDATE usuarios SET nome = :nome, telefone = :telefone, endereco = :endereco WHERE id = :id";
-        $stmt_atualizar = $pdo->prepare($atualizar_usuario);
-        $stmt_atualizar->bindParam(':nome', $nome);
-        $stmt_atualizar->bindParam(':telefone', $telefone);
-        $stmt_atualizar->bindParam(':endereco', $endereco);
-        $stmt_atualizar->bindParam(':id', $user_id);
-        
-        if($stmt_atualizar->execute()) {
-            $_SESSION['nome'] = $nome;
-            $mensagem = "Perfil atualizado com sucesso!";
-            // Recarregar dados do usuário
-            $stmt_usuario->execute();
-            $usuario = $stmt_usuario->fetch(PDO::FETCH_ASSOC);
-        } else {
-            $mensagem = "Erro ao atualizar perfil. Tente novamente.";
-        }
+    if($stmt_atualizar->execute()) {
+        $_SESSION['nome'] = $nome;
+        $mensagem = "Perfil atualizado com sucesso!";
+        // Recarregar dados do usuário
+        $stmt_usuario->execute();
+        $usuario = $stmt_usuario->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $mensagem = "Erro ao atualizar perfil. Tente novamente.";
     }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -63,7 +58,9 @@
                 </div>
                 <div class="nav-menu">
                     <a href="restrita.php" class="nav-link">Início</a>
-                    <a href="restrita.php#acervo" class="nav-link">Acervo</a>
+                    <?php if($_SESSION['email'] === 'login@gmail.com'): ?>
+                    <a href="admin_carros.php" class="nav-link">Gerenciar Carros</a>
+                    <?php endif; ?>
                     <a href="painel.php" class="nav-link active">Painel</a>
                     <a href="logout.php" class="nav-link logout-btn">Sair</a>
                 </div>
@@ -87,24 +84,24 @@
                         <h2>Meus Dados</h2>
                         <form action="painel.php" method="POST" class="painel-form">
                             <div class="form-group">
-                                <label for="nome">Nome Completo</label>
-                                <input type="text" name="nome" id="nome" value="<?php echo $usuario['nome']; ?>" required>
+                                <label for="nome">Nome Completo *</label>
+                                <input type="text" name="nome" id="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
                             </div>
                             
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input type="email" name="email" id="email" value="<?php echo $usuario['email']; ?>" disabled>
+                                <input type="email" name="email" id="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" disabled>
                                 <small>O e-mail não pode ser alterado</small>
                             </div>
                             
                             <div class="form-group">
                                 <label for="telefone">Telefone</label>
-                                <input type="text" name="telefone" id="telefone" value="<?php echo $usuario['telefone'] ?? ''; ?>">
+                                <input type="text" name="telefone" id="telefone" value="<?php echo htmlspecialchars($usuario['telefone'] ?? ''); ?>" placeholder="(11) 99999-9999">
                             </div>
                             
                             <div class="form-group">
                                 <label for="endereco">Endereço</label>
-                                <textarea name="endereco" id="endereco" rows="3"><?php echo $usuario['endereco'] ?? ''; ?></textarea>
+                                <textarea name="endereco" id="endereco" rows="3" placeholder="Digite seu endereço completo"><?php echo htmlspecialchars($usuario['endereco'] ?? ''); ?></textarea>
                             </div>
                             
                             <button type="submit" class="btn-primary">Atualizar Perfil</button>
@@ -112,32 +109,22 @@
                     </div>
                     
                     <div class="painel-card">
-                        <h2>Minhas Preferências</h2>
+                        <h2>Informações da Conta</h2>
                         <div class="preferences">
                             <div class="preference-item">
-                                <h3>Notificações</h3>
-                                <p>Receber novidades por e-mail</p>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider round"></span>
-                                </label>
+                                <h3>Tipo de Conta</h3>
+                                <p>
+                                    <?php echo ($_SESSION['email'] === 'login@gmail.com') ? 'Administrador' : 'Usuário'; ?>
+                                </p>
                             </div>
                             
                             <div class="preference-item">
-                                <h3>Interesses</h3>
-                                <div class="interests">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" checked> Carros anos 60
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" checked> Carros anos 70
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox"> Carros anos 80
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox"> Carros americanos
-                                    </label>
+                                <h3>Ações Disponíveis</h3>
+                                <div style="margin-top: 15px;">
+                                    <a href="restrita.php" class="btn-secondary btn-small" style="margin-right: 10px;">Ver Acervo</a>
+                                    <?php if($_SESSION['email'] === 'login@gmail.com'): ?>
+                                    <a href="admin_carros.php" class="btn-primary btn-small">Gerenciar Carros</a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
