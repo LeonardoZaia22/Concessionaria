@@ -29,7 +29,7 @@ if($stmt->rowCount() == 1) {
         $_SESSION['id'] = $resultado['id'];
         $_SESSION['nome'] = $resultado['nome'];
         $_SESSION['email'] = $resultado['email'];
-        $_SESSION['nivel'] = 'user';
+        $_SESSION['nivel'] = $resultado['nivel'] ?? 'user';
         header('Location: restrita.php');
         exit();
     }

@@ -58,7 +58,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 <div class="nav-menu">
                     <a href="restrita.php" class="nav-link">Início</a>
-                    <?php if($_SESSION['email'] === 'login@gmail.com'): ?>
+                    <?php if($_SESSION['nivel'] === 'admin'): ?>
                     <a href="admin_carros.php" class="nav-link">Gerenciar Carros</a>
                     <?php endif; ?>
                     <a href="painel.php" class="nav-link active">Painel</a>
@@ -114,7 +114,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="preference-item">
                                 <h3>Tipo de Conta</h3>
                                 <p>
-                                    <?php echo ($_SESSION['email'] === 'login@gmail.com') ? 'Administrador' : 'Usuário'; ?>
+                                    <?php echo ($_SESSION['nivel'] === 'admin') ? 'Administrador' : 'Usuário'; ?>
                                 </p>
                             </div>
                             
@@ -122,7 +122,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <h3>Ações Disponíveis</h3>
                                 <div style="margin-top: 15px;">
                                     <a href="restrita.php" class="btn-secondary btn-small" style="margin-right: 10px;">Ver Acervo</a>
-                                    <?php if($_SESSION['email'] === 'login@gmail.com'): ?>
+                                    <?php if($_SESSION['nivel'] === 'admin'): ?>
                                     <a href="admin_carros.php" class="btn-primary btn-small">Gerenciar Carros</a>
                                     <?php endif; ?>
                                 </div>
@@ -155,4 +155,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script src="js/script.js"></script>
 </body>
-</html>
+</html> 

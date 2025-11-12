@@ -45,6 +45,10 @@
                 
                 <button type="submit" class="btn-primary btn-full">Entrar</button>
             </form>
+            
+            <div class="login-footer">
+                <p>Não tem uma conta? <a href="criar_conta.php">Criar conta</a></p>
+            </div>
         </div>
     </main>
 
