@@ -67,7 +67,7 @@
                 <div class="car-grid">
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="img/img05.jpg" alt="Fusca">
+                            <img src="img/img03.jpg" alt="Fusca">
                         </div>
                         <div class="car-info">
                             <h3>Volkswagen Fusca 1975</h3>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="img/img05.jpg" alt="Opala">
+                            <img src="img/img04.jpg" alt="Opala">
                         </div>
                         <div class="car-info">
                             <h3>Chevrolet Opala 1982</h3>
