@@ -17,13 +17,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if($stmt_verificar->rowCount() > 0) {
         $erro = "Este e-mail já está cadastrado.";
     } else {
+        // ✅ ADICIONEI O PASSWORD_HASH AQUI - CRIPTOGRAFAR SENHA
+        $senha_criptografada = password_hash($senha, PASSWORD_DEFAULT);
+        
         // Inserir novo usuário
         $inserir_usuario = "INSERT INTO usuarios (nome, email, senha, telefone, endereco, nivel) 
                            VALUES (:nome, :email, :senha, :telefone, :endereco, 'user')";
         $stmt_inserir = $pdo->prepare($inserir_usuario);
         $stmt_inserir->bindParam(':nome', $nome);
         $stmt_inserir->bindParam(':email', $email);
-        $stmt_inserir->bindParam(':senha', $senha);
+        $stmt_inserir->bindParam(':senha', $senha_criptografada); // ✅ Agora usa a senha criptografada
         $stmt_inserir->bindParam(':telefone', $telefone);
         $stmt_inserir->bindParam(':endereco', $endereco);
         
