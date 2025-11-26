@@ -51,9 +51,8 @@ DEFAULT 'user';
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `telefone`, `endereco`, `nivel`, `data_criacao`) VALUES
-(1, 'Administrador', 'login@gmail.com', 'senha0102', '(11) 99999-9999', 'Rua Administrativa, 123 - São Paulo, SP', 'admin', '2025-10-08 16:49:00'),
-(2, 'Leonardo Silva', 'leo@gmail.com', '22', '(11) 99999-9999', 'Rua Exemplo, 123', 'user', '2025-10-08 16:49:00'),
-(3, 'Maria Santos', 'maria@gmail.com', '123456', '(11) 88888-8888', 'Avenida Principal, 456', 'user', '2025-10-08 16:49:00');
+(1, 'João', 'Joao@gmail.com', '$2y$10$0f4c5XUoT9/YnyEnqla4ueM1oqA.3eY2e4u3d5BieVRG/yb6/YDHS', '55999519', 'rua concessionaria 22', 'admin', '2025-11-26 22:18:30'),
+(2, 'pedro', 'pedro@gmail.com', '$2y$10$zhDuAbha11UVTORNrDymqeFVg2cs4Bjob7op9gvgG1mkEpmI/UPLK', '55124525', 'rua doce de mel', 'user', '2025-11-26 23:09:28');
 
 -- --------------------------------------------------------
 
