@@ -50,23 +50,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <a href="restrita.php">Classic Motors</a>
-                </div>
-                <div class="nav-menu">
-                    <a href="restrita.php" class="nav-link">Início</a>
-                    <?php if($_SESSION['nivel'] === 'admin'): ?>
-                    <a href="admin_carros.php" class="nav-link">Gerenciar Carros</a>
-                    <?php endif; ?>
-                    <a href="painel.php" class="nav-link active">Painel</a>
-                    <a href="logout.php" class="nav-link logout-btn">Sair</a>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <?php
+    include_once 'header2.php';
+    ?>
 
     <main>
         <section class="painel-section">
@@ -134,24 +120,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Classic Motors</h3>
-                    <p>Concessionária especializada em carros antigos e clássicos.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Contato</h3>
-                    <p>Email: contato@classicmotors.com.br</p>
-                    <p>Telefone: (11) 3456-7890</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Classic Motors. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
+    <?php
+    include_once 'footer.php';
+    ?>
 
     <script src="js/script.js"></script>
 </body>

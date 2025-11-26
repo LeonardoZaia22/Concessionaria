@@ -39,11 +39,11 @@ CREATE TABLE `usuarios` (
   `nivel` varchar(20) DEFAULT 'user',
   `data_criacao` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
----,
+--
 
 --
 ALTER TABLE usuarios 
-MODIFY nivel ENUM('user', 'admin', 'moderador') 
+MODIFY COLUMN nivel ENUM('user', 'admin', 'moderador')NOT NULL 
 DEFAULT 'user';
 
 --

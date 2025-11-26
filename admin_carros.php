@@ -600,24 +600,9 @@ $carros = $pdo->query("SELECT * FROM carros WHERE ativo = 1 ORDER BY id DESC")->
         <img class="modal-content" id="modalImage">
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Classic Motors</h3>
-                    <p>Concessionária especializada em carros antigos e clássicos.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Contato</h3>
-                    <p>Email: contato@classicmotors.com.br</p>
-                    <p>Telefone: (11) 3456-7890</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Classic Motors. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
+    <?php
+    include_once 'footer.php';
+    ?>
 
     <script>
         document.getElementById('fotosInput').addEventListener('change', function(e) {

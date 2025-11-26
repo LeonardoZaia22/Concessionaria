@@ -109,10 +109,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </main>
 
-    <footer class="login-footer-page">
-        <div class="container">
-            <p>&copy; 2025 Classic Motors. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+    <?php
+    include_once 'footer.php';
+    ?>
 </body>
 </html>

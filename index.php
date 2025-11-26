@@ -8,19 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <a href="index.php">Classic Motors</a>
-                </div>
-                <div class="nav-menu">
-                    <a href="index.php" class="nav-link">Início</a>
-                    <a href="login.php" class="nav-link login-btn">Login</a>
-                </div>
-            </div>
-        </nav>
-    </header>
+
+    <?php
+    include_once 'header.php';
+    ?>
 
     <main>
         <section class="hero">
@@ -99,6 +90,10 @@
             </div>
         </section>
     </main>
+
+    <?php
+    include_once 'footer.php';
+    ?>
 
     <footer>
         <div class="container">
