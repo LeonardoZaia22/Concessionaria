@@ -13,6 +13,15 @@ $consulta_carros = "SELECT * FROM carros WHERE ativo = 1 ORDER BY destaque DESC,
 $stmt_carros = $pdo->prepare($consulta_carros);
 $stmt_carros->execute();
 $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
+
+// Buscar fotos de todos os carros de uma vez (mais eficiente)
+$fotos_por_carro = [];
+foreach($carros as $carro) {
+    $sql_fotos = "SELECT * FROM fotos_carros WHERE carro_id = :carro_id";
+    $stmt_fotos = $pdo->prepare($sql_fotos);
+    $stmt_fotos->execute([':carro_id' => $carro['id']]);
+    $fotos_por_carro[$carro['id']] = $stmt_fotos->fetchAll();
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -88,13 +97,53 @@ $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
             color: var(--text-muted);
             border-radius: 5px;
         }
+        .modal-detalhes {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 2% auto;
+            position: relative;
+            color: var(--text-color);
+        }
+        .modal-detalhes h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .car-info-card {
+            background: var(--bg-dark);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .car-info-card p {
+            margin: 8px 0;
+        }
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-detalhes {
+                margin: 5% auto;
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <?php
     include_once 'header2.php';
     ?>
-
 
     <main>
         <section class="welcome-section">
@@ -114,6 +163,7 @@ $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
                 <h2>Nosso Acervo Completo</h2>
                 <div class="car-grid">
                     <?php foreach($carros as $carro): ?>
+                    <?php $fotos = $fotos_por_carro[$carro['id']] ?? []; ?>
                     <div class="car-card" onclick="abrirDetalhes(<?php echo $carro['id']; ?>)">
                         <div class="car-image">
                             <?php if(file_exists('img/' . $carro['imagem'])): ?>
@@ -183,8 +233,10 @@ $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
     <!-- Modal de Detalhes do Carro -->
     <div id="detalhesModal" class="modal">
         <span class="close" onclick="fecharDetalhes()">&times;</span>
-        <div class="modal-content" style="background: var(--bg-card); padding: 20px; border-radius: 10px; max-width: 900px; max-height: 90vh; overflow-y: auto;">
-            <div id="detalhesContent"></div>
+        <div class="modal-detalhes">
+            <div id="detalhesContent">
+                <!-- Os detalhes serão carregados aqui via JavaScript -->
+            </div>
         </div>
     </div>
 
@@ -193,24 +245,140 @@ $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
     ?>
 
     <script>
+        // Dados dos carros em formato JavaScript
+        const carrosData = {
+            <?php foreach($carros as $carro): ?>
+            <?php echo $carro['id']; ?>: {
+                id: <?php echo $carro['id']; ?>,
+                marca: "<?php echo htmlspecialchars($carro['marca']); ?>",
+                modelo: "<?php echo htmlspecialchars($carro['modelo']); ?>",
+                ano: <?php echo $carro['ano']; ?>,
+                preco: "<?php echo number_format($carro['preco'], 2, ',', '.'); ?>",
+                descricao: `<?php echo addslashes($carro['descricao']); ?>`,
+                imagem: "<?php echo $carro['imagem']; ?>",
+                destaque: <?php echo $carro['destaque'] ? 'true' : 'false'; ?>,
+                quilometragem: <?php echo $carro['quilometragem'] ?? 'null'; ?>,
+                combustivel: "<?php echo htmlspecialchars($carro['combustivel']); ?>",
+                cambio: "<?php echo htmlspecialchars($carro['cambio']); ?>",
+                cor: "<?php echo htmlspecialchars($carro['cor']); ?>",
+                final_placa: <?php echo $carro['final_placa'] ?? 'null'; ?>,
+                detalhes: `<?php echo addslashes($carro['detalhes'] ?? ''); ?>`,
+                fotos: [
+                    <?php 
+                    $fotos = $fotos_por_carro[$carro['id']] ?? [];
+                    foreach($fotos as $foto): 
+                    ?>
+                    {
+                        id: <?php echo $foto['id']; ?>,
+                        nome: "<?php echo $foto['foto_nome']; ?>"
+                    },
+                    <?php endforeach; ?>
+                ]
+            },
+            <?php endforeach; ?>
+        };
+
         function abrirDetalhes(carroId) {
-            document.getElementById('detalhesContent').innerHTML = '<div style="text-align: center; padding: 40px;">Carregando...</div>';
-            document.getElementById('detalhesModal').style.display = 'block';
+            console.log('Abrindo detalhes do carro ID:', carroId);
             
-            fetch('detalhes_carro.php?id=' + carroId)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao carregar detalhes');
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    document.getElementById('detalhesContent').innerHTML = html;
-                })
-                .catch(error => {
-                    document.getElementById('detalhesContent').innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger-color);">Erro ao carregar detalhes do carro.</div>';
-                    console.error('Erro:', error);
+            const carro = carrosData[carroId];
+            if (!carro) {
+                document.getElementById('detalhesContent').innerHTML = 
+                    '<div style="text-align: center; padding: 40px; color: var(--danger-color);">Carro não encontrado.</div>';
+                document.getElementById('detalhesModal').style.display = 'block';
+                return;
+            }
+
+            // Gerar HTML dos detalhes
+            let fotosHTML = '';
+            if (carro.fotos && carro.fotos.length > 0) {
+                carro.fotos.forEach((foto, index) => {
+                    fotosHTML += `
+                        <div class="gallery-item" onclick="abrirModal('img/carros/${foto.nome}')">
+                            <img src="img/carros/${foto.nome}" alt="Foto adicional ${index + 1}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'height: 80px; display: flex; align-items: center; justify-content: center; background: var(--bg-dark); color: var(--text-muted);\\'>Sem imagem</div>';">
+                            <div style="text-align: center; margin-top: 5px; font-size: 0.8em;">Foto ${index + 1}</div>
+                        </div>
+                    `;
                 });
+            } else {
+                fotosHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Nenhuma foto adicional disponível</div>';
+            }
+
+            const detalhesHTML = `
+                <div class="detalhes-carro">
+                    <h2>${carro.marca} ${carro.modelo} (${carro.ano})
+                        ${carro.destaque ? '<span style="background: var(--primary-color); color: var(--secondary-color); padding: 5px 15px; border-radius: 20px; font-size: 0.8em; margin-left: 15px;">DESTAQUE</span>' : ''}
+                    </h2>
+
+                    <div class="info-grid">
+                        <!-- Galeria de Fotos -->
+                        <div>
+                            <h3 style="color: var(--primary-color); margin-bottom: 15px;">Galeria de Fotos</h3>
+                            <div class="car-gallery">
+                                <!-- Imagem Principal -->
+                                <div class="gallery-item" onclick="abrirModal('img/${carro.imagem}')">
+                                    <img src="img/${carro.imagem}" alt="Imagem principal" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'height: 80px; display: flex; align-items: center; justify-content: center; background: var(--bg-dark); color: var(--text-muted);\\'>Sem imagem</div>';">
+                                    <div style="text-align: center; margin-top: 5px; font-size: 0.8em;">Principal</div>
+                                </div>
+                                ${fotosHTML}
+                            </div>
+                        </div>
+
+                        <!-- Informações do Carro -->
+                        <div>
+                            <h3 style="color: var(--primary-color); margin-bottom: 15px;">Informações do Veículo</h3>
+                            <div class="car-info-card">
+                                <p><strong>Preço:</strong> R$ ${carro.preco}</p>
+                                <p><strong>Marca:</strong> ${carro.marca}</p>
+                                <p><strong>Modelo:</strong> ${carro.modelo}</p>
+                                <p><strong>Ano:</strong> ${carro.ano}</p>
+                                <p><strong>Combustível:</strong> ${carro.combustivel}</p>
+                                <p><strong>Câmbio:</strong> ${carro.cambio}</p>
+                                <p><strong>Cor:</strong> ${carro.cor}</p>
+                                ${carro.quilometragem ? `<p><strong>Quilometragem:</strong> ${carro.quilometragem.toLocaleString('pt-BR')} km</p>` : ''}
+                                ${carro.final_placa ? `<p><strong>Final da Placa:</strong> ${carro.final_placa}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descrição -->
+                    <div style="margin-bottom: 25px;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">Descrição</h3>
+                        <div style="background: var(--bg-dark); padding: 20px; border-radius: 8px; line-height: 1.6;">
+                            ${carro.descricao.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+
+                    ${carro.detalhes ? `
+                    <div style="margin-bottom: 25px;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">Detalhes Adicionais</h3>
+                        <div style="background: var(--bg-dark); padding: 20px; border-radius: 8px; line-height: 1.6;">
+                            ${carro.detalhes.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <!-- Contato -->
+                    <div style="background: var(--primary-color); color: var(--secondary-color); padding: 25px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin-bottom: 15px;">Interessado neste veículo?</h3>
+                        <p style="margin-bottom: 20px; font-size: 1.1em;">Entre em contato conosco para mais informações ou agendar uma visita</p>
+                        <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                            <div style="font-size: 1.1em;">
+                                <strong>Telefone:</strong> (11) 3456-7890
+                            </div>
+                            <div style="font-size: 1.1em;">
+                                <strong>E-mail:</strong> vendas@classicmotors.com.br
+                            </div>
+                            <div style="font-size: 1.1em;">
+                                <strong>WhatsApp:</strong> (11) 98765-4321
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detalhesContent').innerHTML = detalhesHTML;
+            document.getElementById('detalhesModal').style.display = 'block';
         }
 
         function fecharDetalhes() {
@@ -218,12 +386,13 @@ $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
         }
 
         function abrirModal(src) {
+            console.log('Abrindo imagem:', src);
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.style.display = 'block';
             modal.innerHTML = `
                 <span class="close" onclick="this.parentElement.style.display='none'">&times;</span>
-                <img class="modal-content" src="${src}" onerror="this.style.display='none'; this.parentElement.querySelector('.close').style.display='none';">
+                <img class="modal-content" src="${src}" alt="Imagem ampliada" onerror="this.style.display='none'; this.parentElement.querySelector('.close').style.display='none';">
             `;
             document.body.appendChild(modal);
             
@@ -235,12 +404,20 @@ $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
             }
         }
 
+        // Fechar modal ao clicar fora
         window.onclick = function(event) {
             const modal = document.getElementById('detalhesModal');
             if (event.target === modal) {
                 fecharDetalhes();
             }
         }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                fecharDetalhes();
+            }
+        });
     </script>
 </body>
 </html>

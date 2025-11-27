@@ -13,6 +13,12 @@
     include_once 'header.php';
     ?>
 
+    <?php if(isset($_GET['conta_excluida'])): ?>
+    <div class="alert alert-success" style="margin: 20px auto; max-width: 1200px; text-align: center;">
+        ✅ Sua conta foi excluída com sucesso. Sentiremos sua falta!
+    </div>
+<?php endif; ?>
+
     <main>
         <section class="hero">
             <div class="hero-content">
@@ -20,6 +26,7 @@
                 <p>Descubra a beleza atemporal dos carros clássicos. Nossa concessionária especializada oferece os veículos mais icônicos dos anos 60, 70 e 80, cuidadosamente restaurados e preservados.</p>
                 <div class="hero-buttons">
                     <a href="login.php" class="btn-primary">Acessar Acervo</a>
+                    <a href="#sobre" class="btn-secondary">Saiba Mais</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -63,6 +70,7 @@
                         <div class="car-info">
                             <h3>Volkswagen Fusca 1975</h3>
                             <p class="car-price">R$ 45.000,00</p>
+                            <p class="car-description">Fusca 1300 L em ótimo estado de conservação. Carro todo original.</p>
                         </div>
                     </div>
                     <div class="car-card">
@@ -72,6 +80,7 @@
                         <div class="car-info">
                             <h3>Chevrolet Opala 1982</h3>
                             <p class="car-price">R$ 65.000,00</p>
+                            <p class="car-description">Opala Comodoro 4.1. Carro com pintura original e interior em couro.</p>
                         </div>
                     </div>
                     <div class="car-card">
@@ -81,6 +90,7 @@
                         <div class="car-info">
                             <h3>Ford Maverick 1974</h3>
                             <p class="car-price">R$ 75.000,00</p>
+                            <p class="car-description">Maverick GT V8. Um clássico americano com motor 302.</p>
                         </div>
                     </div>
                 </div>
@@ -94,31 +104,6 @@
     <?php
     include_once 'footer.php';
     ?>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Classic Motors</h3>
-                    <p>Concessionária especializada em carros antigos e clássicos.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Contato</h3>
-                    <p>Email: contato@classicmotors.com.br</p>
-                    <p>Telefone: (11) 3456-7890</p>
-                    <p>Endereço: Rua dos Clássicos, 123 - São Paulo, SP</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Horário de Funcionamento</h3>
-                    <p>Segunda a Sexta: 9h às 18h</p>
-                    <p>Sábado: 9h às 13h</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Classic Motors. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
 
     <script src="js/script.js"></script>
 </body>

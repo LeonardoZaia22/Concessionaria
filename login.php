@@ -21,6 +21,12 @@
         </nav>
     </header>
 
+    <?php if(isset($_GET['conta_excluida'])): ?>
+    <div class="alert alert-success" style="margin: 20px auto; max-width: 450px; text-align: center;">
+         Sua conta foi excluída com sucesso. Sentiremos sua falta!
+    </div>
+<?php endif; ?>
+
     <main class="login-container">
         <div class="login-form-container">
             <h1>Acesse sua conta</h1>

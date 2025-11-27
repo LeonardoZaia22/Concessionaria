@@ -36,23 +36,17 @@ CREATE TABLE `usuarios` (
   `senha` varchar(255) NOT NULL,
   `telefone` varchar(20) DEFAULT NULL,
   `endereco` text DEFAULT NULL,
-  `nivel` varchar(20) DEFAULT 'user',
+  `nivel` enum('user','admin') NOT NULL DEFAULT 'user',
   `data_criacao` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
---
-
---
-ALTER TABLE usuarios 
-MODIFY COLUMN nivel ENUM('user', 'admin', 'moderador')NOT NULL 
-DEFAULT 'user';
 
 --
 -- Despejando dados para a tabela `usuarios`
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `telefone`, `endereco`, `nivel`, `data_criacao`) VALUES
-(1, 'João', 'Joao@gmail.com', '$2y$10$0f4c5XUoT9/YnyEnqla4ueM1oqA.3eY2e4u3d5BieVRG/yb6/YDHS', '55999519', 'rua concessionaria 22', 'admin', '2025-11-26 22:18:30'),
-(2, 'pedro', 'pedro@gmail.com', '$2y$10$zhDuAbha11UVTORNrDymqeFVg2cs4Bjob7op9gvgG1mkEpmI/UPLK', '55124525', 'rua doce de mel', 'user', '2025-11-26 23:09:28');
+(1, 'Administrador', 'adm@gmail.com', 'adm0102', '(11) 9999-9999', 'Rua da Administração, 123', 'admin', '2025-10-08 17:49:00'),
+(2, 'Usuário Teste', 'usuario@gmail.com', 'usuario0102', '(11) 8888-8888', 'Rua do Usuário, 456', 'user', '2025-10-08 17:49:00');
 
 -- --------------------------------------------------------
 
@@ -67,7 +61,7 @@ CREATE TABLE `carros` (
   `ano` int(11) NOT NULL,
   `preco` decimal(10,2) NOT NULL,
   `descricao` text NOT NULL,
-  `imagem` varchar(255) DEFAULT 'default.jpg',
+  `imagem` varchar(255) DEFAULT 'img05.jpg',
   `destaque` tinyint(1) DEFAULT 0,
   `quilometragem` int(11) DEFAULT NULL,
   `combustivel` varchar(50) DEFAULT 'Gasolina',
@@ -84,12 +78,12 @@ CREATE TABLE `carros` (
 --
 
 INSERT INTO `carros` (`id`, `modelo`, `marca`, `ano`, `preco`, `descricao`, `imagem`, `destaque`, `quilometragem`, `combustivel`, `cambio`, `cor`, `final_placa`, `detalhes`, `data_cadastro`, `ativo`) VALUES
-(1, 'Fusca 1300 L', 'Volkswagen', 1975, 45000.00, 'Fusca 1300 L em ótimo estado de conservação. Carro todo original, com motor revisado e documentação em dia. Perfect para colecionadores e entusiastas.', 'img05.jpg', 1, 85000, 'Gasolina', 'Manual', 'Azul', 5, 'Carro totalmente original, com documentação em dia e histórico de manutenção completo. Motor revisado recentemente. Único dono desde novo.', '2025-10-08 16:49:00', 1),
-(2, 'Opala Comodoro', 'Chevrolet', 1982, 65000.00, 'Opala Comodoro 4.1. Carro com pintura original, interior em couro e mecânica impecável. Um clássico brasileiro em estado de concours.', 'img05.jpg', 1, 120000, 'Gasolina', 'Manual', 'Preto', 3, 'Opala Comodoro em excelente estado de conservação. Interior em couro original bem preservado. Sistema de som original funcionando perfeitamente.', '2025-10-08 16:49:00', 1),
-(3, 'Maverick GT', 'Ford', 1974, 75000.00, 'Maverick GT V8. Um clássico americano com motor 302 e som característico inconfundível. Potência e estilo em um pacote irresistível.', 'img05.jpg', 1, 95000, 'Gasolina', 'Automático', 'Vermelho', 7, 'Maverick GT V8 com motor original. Pintura recente e interior reformado. Documentação importada regularizada.', '2025-10-08 16:49:00', 1),
-(4, 'Brasília LS', 'Volkswagen', 1979, 35000.00, 'Brasília LS. Carro econômico e divertido, perfeito para colecionadores. Design único e mecânica confiável do motor boxer.', 'img05.jpg', 0, 78000, 'Gasolina', 'Manual', 'Amarelo', 1, 'Brasília LS conservada, perfeita para colecionadores. Baixa quilometragem. Último ano de fabricação.', '2025-10-08 16:49:00', 1),
-(5, 'Chevette Hatch', 'Chevrolet', 1985, 28000.00, 'Chevette Hatch. Conservado, com apenas 2 donos e toda a documentação organizada. Ideal para primeiro carro clássico.', 'img05.jpg', 0, 110000, 'Álcool', 'Manual', 'Cinza', 9, 'Chevette hatch com apenas 2 donos. Documentação organizada e mecânica em dia. Recentemente pintado.', '2025-10-08 16:49:00', 1),
-(6, 'Corcel II', 'Ford', 1978, 32000.00, 'Corcel II. Carro com mecânica simples e de fácil manutenção, ideal para primeiro clássico. Design elegante e confortável.', 'img05.jpg', 0, 135000, 'Gasolina', 'Manual', 'Marrom', 2, 'Corcel II bem conservado. Ideal para primeiro carro clássico, de fácil manutenção. Interior em ótimo estado.', '2025-10-08 16:49:00', 1);
+(1, 'Fusca 1300 L', 'Volkswagen', 1975, 45000.00, 'Fusca 1300 L em estado de concours! Carro totalmente original, com motor 1.300cc revisado, documentação em dia e histórico de apenas 2 proprietários. Pintura azul metálica original preservada, interior em ótimo estado e mecânica impecável. Perfect para colecionadores e entusiastas que buscam autenticidade.', 'img05.jpg', 1, 85000, 'Gasolina', 'Manual', 'Azul', 5, 'Carro totalmente original, com documentação em dia e histórico de manutenção completo. Motor revisado recentemente. Único dono desde novo. Inclui manual original e chave reserva.', '2025-10-08 16:49:00', 1),
+(2, 'Opala Comodoro', 'Chevrolet', 1982, 65000.00, 'Opala Comodoro 4.1 SL/E - O clássico brasileiro em seu auge! Este exemplar possui pintura preta original, interior em couro genuíno conservado, ar-condicionado funcionando perfeitamente e todos os opcionais de fábrica. Motor 4.1 com carburador duplo, escapamento esportivo e suspensão recentemente revisada.', 'img05.jpg', 1, 120000, 'Gasolina', 'Manual', 'Preto', 3, 'Opala Comodoro em excelente estado de conservação. Interior em couro original bem preservado. Sistema de som original funcionando perfeitamente. Documentação completa desde a primeira licença.', '2025-10-08 16:49:00', 1),
+(3, 'Maverick GT', 'Ford', 1974, 75000.00, 'Maverick GT V8 - O muscle car brasileiro! Equipado com motor V8 302 de fabricação nacional, câmbio automático e diferencial autoblocante. Pintura vermelha recente, interior reformado com materiais originais e sistema de som premium. Documentação de importação regularizada e laudo de autenticidade.', 'img05.jpg', 1, 95000, 'Gasolina', 'Automático', 'Vermelho', 7, 'Maverick GT V8 com motor original. Pintura recente e interior reformado. Documentação importada regularizada. Inclui pneus novos e kit de ferramentas original.', '2025-10-08 16:49:00', 1),
+(4, 'Brasília LS', 'Volkswagen', 1979, 35000.00, 'Brasília LS - O compacto elegante da Volkswagen! Último ano de fabricação, com apenas 78.000km rodados. Carro muito econômico, perfeito para uso urbano e viagens. Motor 1.6 boxer refrigerado a ar, extremamente confiável e de baixa manutenção. Ideal para primeiro carro clássico.', 'img05.jpg', 0, 78000, 'Gasolina', 'Manual', 'Amarelo', 1, 'Brasília LS conservada, perfeita para colecionadores. Baixa quilometragem. Último ano de fabricação. Documentação organizada e revisão completa recente.', '2025-10-08 16:49:00', 1),
+(5, 'Chevette Hatch', 'Chevrolet', 1985, 28000.00, 'Chevette Hatch - O esportivo compacto! Versão hatch com motor 1.6 álcool, câmbio manual de 5 marchas e suspensão esportiva. Carro ágil e divertido de dirigir, com apenas 2 proprietários e toda documentação organizada. Pintura cinza grafite recente e interior em ótimo estado de conservação.', 'img05.jpg', 0, 110000, 'Álcool', 'Manual', 'Cinza', 9, 'Chevette hatch com apenas 2 donos. Documentação organizada e mecânica em dia. Recentemente pintado. Inclui manual do proprietário e nota fiscal de compra.', '2025-10-08 16:49:00', 1),
+(6, 'Corcel II', 'Ford', 1978, 32000.00, 'Corcel II - O elegante da Ford! Linha 1978 com motor 1.6, câmbio manual e acabamento GL. Carro muito confortável, com direção hidráulica, bancos de veludo originais e painel completo. Mecânica simples e de fácil manutenção, perfeito para quem está começando no mundo dos clássicos.', 'img05.jpg', 0, 135000, 'Gasolina', 'Manual', 'Marrom', 2, 'Corcel II bem conservado. Ideal para primeiro carro clássico, de fácil manutenção. Interior em ótimo estado. Revisão completa do motor e suspensão realizada há 3 meses.', '2025-10-08 16:49:00', 1);
 
 -- --------------------------------------------------------
 
@@ -103,6 +97,18 @@ CREATE TABLE `fotos_carros` (
   `foto_nome` varchar(255) NOT NULL,
   `data_upload` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `fotos_carros`
+--
+
+INSERT INTO `fotos_carros` (`id`, `carro_id`, `foto_nome`, `data_upload`) VALUES
+(1, 1, 'fusca_interior.jpg', '2025-10-08 17:49:00'),
+(2, 1, 'fusca_motor.jpg', '2025-10-08 17:49:00'),
+(3, 2, 'opala_interior.jpg', '2025-10-08 17:49:00'),
+(4, 2, 'opala_traseira.jpg', '2025-10-08 17:49:00'),
+(5, 3, 'maverick_motor.jpg', '2025-10-08 17:49:00'),
+(6, 3, 'maverick_lateral.jpg', '2025-10-08 17:49:00');
 
 -- --------------------------------------------------------
 
@@ -217,7 +223,7 @@ ALTER TABLE `contatos`
 -- AUTO_INCREMENT de tabela `fotos_carros`
 --
 ALTER TABLE `fotos_carros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `logs_sistema`
@@ -229,7 +235,7 @@ ALTER TABLE `logs_sistema`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `vendas`

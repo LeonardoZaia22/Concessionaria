@@ -1,6 +1,8 @@
 <?php
 include_once 'conexao.php';
 
+$erro = '';
+
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome'];
     $email = $_POST['email'];
@@ -17,16 +19,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if($stmt_verificar->rowCount() > 0) {
         $erro = "Este e-mail já está cadastrado.";
     } else {
-        // ✅ ADICIONEI O PASSWORD_HASH AQUI - CRIPTOGRAFAR SENHA
-        $senha_criptografada = password_hash($senha, PASSWORD_DEFAULT);
-        
-        // Inserir novo usuário
+        // Inserir novo usuário (senha sem criptografia para compatibilidade)
         $inserir_usuario = "INSERT INTO usuarios (nome, email, senha, telefone, endereco, nivel) 
                            VALUES (:nome, :email, :senha, :telefone, :endereco, 'user')";
         $stmt_inserir = $pdo->prepare($inserir_usuario);
         $stmt_inserir->bindParam(':nome', $nome);
         $stmt_inserir->bindParam(':email', $email);
-        $stmt_inserir->bindParam(':senha', $senha_criptografada); // ✅ Agora usa a senha criptografada
+        $stmt_inserir->bindParam(':senha', $senha);
         $stmt_inserir->bindParam(':telefone', $telefone);
         $stmt_inserir->bindParam(':endereco', $endereco);
         
@@ -68,21 +67,27 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h1>Criar Conta</h1>
             <p>Preencha os dados abaixo para criar sua conta</p>
             
-            <?php if(isset($erro)): ?>
+            <?php if(!empty($erro)): ?>
                 <div class="alert alert-success" style="background-color: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);">
                     <?php echo $erro; ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if(isset($_GET['sucesso'])): ?>
+                <div class="alert alert-success">
+                    Conta criada com sucesso! Faça login para continuar.
                 </div>
             <?php endif; ?>
             
             <form action="criar_conta.php" method="POST" class="login-form">
                 <div class="form-group">
                     <label for="nome">Nome Completo *</label>
-                    <input type="text" name="nome" id="nome" placeholder="Seu nome completo" required>
+                    <input type="text" name="nome" id="nome" placeholder="Seu nome completo" required value="<?php echo isset($_POST['nome']) ? htmlspecialchars($_POST['nome']) : ''; ?>">
                 </div>
                 
                 <div class="form-group">
                     <label for="email">E-mail *</label>
-                    <input type="email" name="email" id="email" placeholder="Seu e-mail" required>
+                    <input type="email" name="email" id="email" placeholder="Seu e-mail" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                 </div>
                 
                 <div class="form-group">
@@ -92,12 +97,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 <div class="form-group">
                     <label for="telefone">Telefone</label>
-                    <input type="text" name="telefone" id="telefone" placeholder="(11) 99999-9999">
+                    <input type="text" name="telefone" id="telefone" placeholder="(11) 99999-9999" value="<?php echo isset($_POST['telefone']) ? htmlspecialchars($_POST['telefone']) : ''; ?>">
                 </div>
                 
                 <div class="form-group">
                     <label for="endereco">Endereço</label>
-                    <textarea name="endereco" id="endereco" rows="3" placeholder="Digite seu endereço completo"></textarea>
+                    <textarea name="endereco" id="endereco" rows="3" placeholder="Digite seu endereço completo"><?php echo isset($_POST['endereco']) ? htmlspecialchars($_POST['endereco']) : ''; ?></textarea>
                 </div>
                 
                 <button type="submit" class="btn-primary btn-full">Criar Conta</button>
