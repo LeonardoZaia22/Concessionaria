@@ -11,9 +11,11 @@
 <body>
 
     <?php
+    // Inclui o cabeçalho do site
     include_once 'includes/header.php';
     ?>
 
+    <!-- Mostra mensagem se a conta foi excluída com sucesso -->
     <?php if(isset($_GET['conta_excluida'])): ?>
     <div class="alert alert-success" style="margin: 20px auto; max-width: 1200px; text-align: center;">
         ✅ Sua conta foi excluída com sucesso. Sentiremos sua falta!
@@ -21,17 +23,20 @@
     <?php endif; ?>
 
     <main>
+        <!-- Seção Hero/Banner principal -->
         <section class="hero">
             <div class="hero-content">
                 <h1>Bem-vindo à Classic Motors</h1>
                 <p>Descubra a beleza atemporal dos carros clássicos. Nossa concessionária especializada oferece os veículos mais icônicos dos anos 60, 70 e 80, cuidadosamente restaurados e preservados.</p>
                 <div class="hero-buttons">
+                    <!-- Botões de ação principais -->
                     <a href="login.php" class="btn-primary">Acessar Acervo</a>
                     <a href="#sobre" class="btn-secondary">Saiba Mais</a>
                 </div>
             </div>
             <div class="hero-image">
                 <div class="car-slider">
+                    <!-- Imagem do carro destaque -->
                     <div class="car-slide active">
                         <img src="img/ford_maverick_gt_1974_principal.jpg" alt="Ford Maverick GT 1974" 
                              onerror="this.src='img/GT1.jpeg';">
@@ -40,6 +45,7 @@
             </div>
         </section>
 
+        <!-- Seção Sobre a empresa -->
         <section id="sobre" class="about">
             <div class="container">
                 <h2>Sobre a Classic Motors</h2>
@@ -47,6 +53,7 @@
                     <div class="about-text">
                         <p>Há mais de 20 anos no mercado, a Classic Motors é referência em veículos clássicos e antigos. Nossa missão é conectar colecionadores e entusiastas aos carros que marcaram época.</p>
                         <p>Contamos com uma equipe especializada em restauração e manutenção, garantindo que cada veículo em nosso acervo esteja em perfeitas condições de funcionamento e conservação.</p>
+                        <!-- Lista de benefícios -->
                         <ul>
                             <li>Veículos originais e documentados</li>
                             <li>Processo de restauração transparente</li>
@@ -55,6 +62,7 @@
                         </ul>
                     </div>
                     <div class="about-image">
+                        <!-- Imagem da oficina/sobre -->
                         <img src="img/GT1.jpeg" alt="Oficina de restauração" 
                              onerror="this.src='img/ford_maverick_gt_1974_principal.jpg';">
                     </div>
@@ -62,10 +70,12 @@
             </div>
         </section>
 
+        <!-- Seção de carros em destaque -->
         <section class="destaques">
             <div class="container">
                 <h2>Destaques do Acervo</h2>
                 <div class="car-grid">
+                    <!-- Card do Fusca -->
                     <div class="car-card">
                         <div class="car-image">
                             <img src="img/fus1.jpeg" alt="Fusca" 
@@ -77,6 +87,8 @@
                             <p class="car-description">Fusca 1300 L em ótimo estado de conservação. Carro todo original.</p>
                         </div>
                     </div>
+                    
+                    <!-- Card do Chevette -->
                     <div class="car-card">
                         <div class="car-image">
                             <img src="img/che1.jpeg" alt="Chevette" 
@@ -88,6 +100,8 @@
                             <p class="car-description">Chevette Hatch SL. Carro conservado e com documentação em dia.</p>
                         </div>
                     </div>
+                    
+                    <!-- Card do Maverick -->
                     <div class="car-card">
                         <div class="car-image">
                             <img src="img/ford_maverick_gt_1974_principal.jpg" alt="Maverick" 
@@ -100,6 +114,8 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Botão para ver mais carros -->
                 <div class="text-center">
                     <a href="login.php" class="btn-primary">Ver Acervo Completo</a>
                 </div>
@@ -108,9 +124,11 @@
     </main>
 
     <?php
+    // Inclui o rodapé do site
     include_once 'includes/footer.php';
     ?>
 
+    <!-- Inclui o arquivo JavaScript -->
     <script src="js/script.js"></script>
 </body>
 </html>

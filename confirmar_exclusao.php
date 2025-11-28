@@ -1,47 +1,57 @@
 <?php
+// Inicia a sessão para acessar dados do usuário logado
 session_start();
 
+// Verifica se o usuário está logado - se não tiver ID, email e nome na sessão
 if((!isset($_SESSION['id'])) and (!isset($_SESSION['email'])) and (!isset($_SESSION['nome']))){
+    // Se não estiver logado, redireciona para a página inicial
     header('location: index.php');
     exit();
 }
 
+// Inclui o arquivo de conexão com o banco de dados
 include_once 'conexao.php';
 
-// Processar exclusão da conta
+// Processa a exclusão da conta quando o formulário é enviado
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Se o usuário confirmou a exclusão
     if(isset($_POST['confirmar_exclusao'])) {
         $user_id = $_SESSION['id'];
         $email = $_SESSION['email'];
         
-        // Verificar se é o último admin (impedir exclusão)
+        // Verifica se é administrador para ver se pode excluir
         if($_SESSION['nivel'] === 'admin') {
+            // Conta quantos administradores existem no sistema
             $sql_count_admins = "SELECT COUNT(*) as total FROM usuarios WHERE nivel = 'admin'";
             $stmt_count = $pdo->prepare($sql_count_admins);
             $stmt_count->execute();
             $total_admins = $stmt_count->fetch()['total'];
             
+            // Se for o único admin, não permite excluir
             if($total_admins <= 1) {
                 $erro = "Não é possível excluir a única conta de administrador do sistema.";
             }
         }
         
+        // Se não houve erro (não é o último admin)
         if(!isset($erro)) {
-            // Excluir a conta
+            // Comando SQL para excluir o usuário do banco
             $sql_excluir = "DELETE FROM usuarios WHERE id = :id";
             $stmt_excluir = $pdo->prepare($sql_excluir);
             
+            // Tenta executar a exclusão
             if($stmt_excluir->execute([':id' => $user_id])) {
-                // Logout e redirecionamento
+                // Se conseguiu excluir, destrói a sessão e redireciona
                 session_destroy();
                 header('Location: index.php?conta_excluida=1');
                 exit();
             } else {
+                // Se deu erro na exclusão
                 $erro = "Erro ao excluir conta. Tente novamente.";
             }
         }
     } else {
-        // Cancelar exclusão
+        // Se cancelou a exclusão, volta para o painel
         header('Location: painel.php');
         exit();
     }
@@ -56,6 +66,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Estilos para a página de confirmação de exclusão */
         .exclusao-container {
             max-width: 600px;
             margin: 50px auto;
@@ -102,7 +113,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <?php
-    // CORREÇÃO: header2.php está na pasta includes/
+    // Inclui o cabeçalho da página
     include_once 'includes/header2.php';
     ?>
 
@@ -111,14 +122,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="container">
                 <div class="exclusao-container">
                     <?php if(isset($erro)): ?>
+                        <!-- Mostra mensagem de erro se não puder excluir -->
                         <div class="alert alert-success" style="background-color: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);">
                             <?php echo $erro; ?>
                         </div>
                         <a href="painel.php" class="btn-secondary">Voltar ao Painel</a>
                     <?php else: ?>
+                        <!-- Interface de confirmação de exclusão -->
                         <div class="warning-icon">⚠️</div>
                         <h1 style="color: var(--danger-color);">Confirmar Exclusão de Conta</h1>
                         
+                        <!-- Área de aviso sobre o que será perdido -->
                         <div style="background: rgba(220, 53, 69, 0.1); padding: 20px; border-radius: 8px; margin: 20px 0;">
                             <h3>Você está prestes a excluir sua conta permanentemente!</h3>
                             <p><strong>Esta ação não pode ser desfeita.</strong></p>
@@ -133,22 +147,27 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </ul>
                             </div>
                             
+                            <!-- Mostra informações do usuário que será excluído -->
                             <p><strong>Usuário:</strong> <?php echo htmlspecialchars($_SESSION['email']); ?></p>
                             <p><strong>Nome:</strong> <?php echo htmlspecialchars($_SESSION['nome']); ?></p>
                         </div>
 
+                        <!-- Formulário de confirmação -->
                         <form action="confirmar_exclusao.php" method="POST">
                             <div style="margin: 25px 0;">
                                 <label style="display: block; margin-bottom: 10px;">
+                                    <!-- Checkbox de confirmação obrigatória -->
                                     <input type="checkbox" name="confirmacao" required>
                                     <strong>Eu entendo que esta ação é irreversível</strong>
                                 </label>
                             </div>
                             
                             <div>
+                                <!-- Botão para confirmar exclusão (com confirmação JavaScript) -->
                                 <button type="submit" name="confirmar_exclusao" class="btn-danger" onclick="return confirm('CONFIRMAÇÃO FINAL: Tem ABSOLUTA certeza que deseja EXCLUIR SUA CONTA PERMANENTEMENTE?')">
                                     SIM, EXCLUIR MINHA CONTA
                                 </button>
+                                <!-- Botão para cancelar -->
                                 <button type="submit" name="cancelar" class="btn-secondary">
                                     Cancelar e Voltar
                                 </button>
@@ -161,7 +180,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     </main>
 
     <?php
-    // CORREÇÃO: footer.php está na pasta includes/
+    // Inclui o rodapé da página
     include_once 'includes/footer.php';
     ?>
 </body>

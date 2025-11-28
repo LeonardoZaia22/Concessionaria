@@ -1,5 +1,5 @@
 <?php
-// CONFIGURAÇÃO SIMPLES DAS IMAGENS - MAPEAMENTO COMPLETO
+// Aqui eu fiz uma lista (array) que liga nomes de carros à imagem deles
 $config_imagens = [
     // Ford Maverick
     'Maverick' => 'ford_maverick_gt_1974_principal.jpg',
@@ -39,17 +39,19 @@ $config_imagens = [
     'brasilia' => 'bra1.jpeg'
 ];
 
+// Função que retorna a imagem do carro baseado no modelo e na marca
 function getImagemCarro($modelo, $marca) {
-    global $config_imagens;
+    global $config_imagens; // pega o array lá de cima
     
-    // Procura pelo modelo no array
+    // Aqui eu procuro se o modelo existe na lista
     foreach($config_imagens as $key => $imagem) {
+        // stripos procura uma palavra dentro da outra sem diferenciar maiúsculas/minúsculas
         if (stripos($modelo, $key) !== false) {
-            return $imagem;
+            return $imagem; // se achar, volta a imagem certa
         }
     }
     
-    // Se não encontrou, tenta pela marca
+    // Se não achou pelo modelo, aqui tenta pela marca
     if (stripos($marca, 'ford') !== false) {
         return 'ford_maverick_gt_1974_principal.jpg';
     } elseif (stripos($marca, 'chevrolet') !== false) {
@@ -60,7 +62,7 @@ function getImagemCarro($modelo, $marca) {
         return 'fiat_uno_1991_principal.jpeg';
     }
     
-    // Imagem padrão
+    // Se não achou nada, volta uma imagem padrão
     return 'ford_maverick_gt_1974_principal.jpg';
 }
-?>  
+?>

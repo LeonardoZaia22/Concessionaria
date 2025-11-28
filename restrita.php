@@ -1,21 +1,24 @@
 <?php
+// Inicia a sessão para acessar dados do usuário logado
 session_start();
 
+// Verifica se o usuário está logado - se não tiver ID, email e nome na sessão, redireciona para index
 if((!isset($_SESSION['id'])) and (!isset($_SESSION['email'])) and (!isset($_SESSION['nome']))){
     header('location: index.php');
     exit();
 }
 
+// Inclui arquivos necessários para conexão com banco e configuração de imagens
 include_once 'conexao.php';
 include_once 'config_imagens.php'; // ADICIONEI ESTA LINHA
 
-// Buscar TODOS os carros ativos
+// Buscar TODOS os carros ativos do banco, ordenando por destaque e ID
 $consulta_carros = "SELECT * FROM carros WHERE ativo = 1 ORDER BY destaque DESC, id DESC";
 $stmt_carros = $pdo->prepare($consulta_carros);
 $stmt_carros->execute();
 $carros = $stmt_carros->fetchAll(PDO::FETCH_ASSOC);
 
-// Buscar fotos de todos os carros de uma vez (mais eficiente)
+// Buscar fotos de todos os carros de uma vez (mais eficiente que buscar um por um)
 $fotos_por_carro = [];
 foreach($carros as $carro) {
     $sql_fotos = "SELECT * FROM fotos_carros WHERE carro_id = :carro_id";
@@ -33,6 +36,7 @@ foreach($carros as $carro) {
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Estilos para o modal que mostra as imagens ampliadas */
         .modal {
             display: none;
             position: fixed;
@@ -59,6 +63,7 @@ foreach($carros as $carro) {
             font-weight: bold;
             cursor: pointer;
         }
+        /* Estilos para a galeria de fotos em miniatura */
         .car-gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -80,6 +85,7 @@ foreach($carros as $carro) {
             height: 80px;
             object-fit: cover;
         }
+        /* Efeitos hover nos cards dos carros */
         .car-card {
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -88,6 +94,7 @@ foreach($carros as $carro) {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
+        /* Placeholder para quando não tem imagem */
         .image-placeholder {
             width: 100%;
             height: 200px;
@@ -98,6 +105,7 @@ foreach($carros as $carro) {
             color: var(--text-muted);
             border-radius: 5px;
         }
+        /* Estilos para o modal de detalhes */
         .modal-detalhes {
             background: var(--bg-card);
             padding: 30px;
@@ -115,6 +123,7 @@ foreach($carros as $carro) {
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 10px;
         }
+        /* Grid para organizar informações do carro */
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -130,6 +139,7 @@ foreach($carros as $carro) {
         .car-info-card p {
             margin: 8px 0;
         }
+        /* Responsividade para mobile */
         @media (max-width: 768px) {
             .info-grid {
                 grid-template-columns: 1fr;
@@ -143,10 +153,12 @@ foreach($carros as $carro) {
 </head>
 <body>
     <?php
+    // Inclui o header da página
     include_once 'includes/header2.php';
     ?>
 
     <main>
+        <!-- Seção de boas-vindas personalizada -->
         <section class="welcome-section">
             <div class="container">
                 <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome']); ?>!</h1>
@@ -159,16 +171,19 @@ foreach($carros as $carro) {
             </div>
         </section>
 
+        <!-- Seção principal do acervo -->
         <section id="acervo" class="acervo-section">
             <div class="container">
                 <h2>Nosso Acervo Completo</h2>
                 <div class="car-grid">
                     <?php foreach($carros as $carro): ?>
                     <?php 
+                    // Pega as fotos do carro atual
                     $fotos = $fotos_por_carro[$carro['id']] ?? [];
-                    // LINHA SIMPLES PARA PEGAR A IMAGEM CORRETA
+                    // LINHA SIMPLES PARA PEGAR A IMAGEM CORRETA - usa função do config_imagens
                     $imagem_principal = getImagemCarro($carro['modelo'], $carro['marca']);
                     ?>
+                    <!-- Card de cada carro - clicável para abrir detalhes -->
                     <div class="car-card" onclick="abrirDetalhes(<?php echo $carro['id']; ?>)">
                         <div class="car-image">
                             <img src="img/<?php echo $imagem_principal; ?>" alt="<?php echo htmlspecialchars($carro['marca'] . ' ' . $carro['modelo']); ?>">
@@ -196,6 +211,7 @@ foreach($carros as $carro) {
                     <?php endforeach; ?>
                 </div>
                 
+                <!-- Mensagem se não houver carros -->
                 <?php if(count($carros) === 0): ?>
                 <div class="text-center">
                     <p>Nenhum carro cadastrado no momento.</p>
@@ -207,6 +223,7 @@ foreach($carros as $carro) {
             </div>
         </section>
 
+        <!-- Seção de contato -->
         <section class="contact-section">
             <div class="container">
                 <h2>Interessado em algum veículo?</h2>
@@ -229,7 +246,7 @@ foreach($carros as $carro) {
         </section>
     </main>
 
-    <!-- Modal de Detalhes do Carro -->
+    <!-- Modal de Detalhes do Carro (inicialmente escondido) -->
     <div id="detalhesModal" class="modal">
         <span class="close" onclick="fecharDetalhes()">&times;</span>
         <div class="modal-detalhes">
@@ -240,11 +257,12 @@ foreach($carros as $carro) {
     </div>
 
     <?php
+    // Inclui o footer
     include_once 'includes/footer.php';
     ?>
 
     <script>
-        // Dados dos carros em formato JavaScript
+        // Dados dos carros em formato JavaScript para usar no frontend
         const carrosData = {
             <?php foreach($carros as $carro): ?>
             <?php 
@@ -278,6 +296,7 @@ foreach($carros as $carro) {
             <?php endforeach; ?>
         };
 
+        // Função para abrir modal com detalhes do carro
         function abrirDetalhes(carroId) {
             console.log('Abrindo detalhes do carro ID:', carroId);
             
@@ -381,10 +400,12 @@ foreach($carros as $carro) {
             document.getElementById('detalhesModal').style.display = 'block';
         }
 
+        // Função para fechar o modal de detalhes
         function fecharDetalhes() {
             document.getElementById('detalhesModal').style.display = 'none';
         }
 
+        // Função para abrir modal com imagem ampliada
         function abrirModal(src) {
             console.log('Abrindo imagem:', src);
             const modal = document.createElement('div');
@@ -412,7 +433,7 @@ foreach($carros as $carro) {
             }
         }
 
-        // Fechar modal com ESC
+        // Fechar modal com tecla ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 fecharDetalhes();
