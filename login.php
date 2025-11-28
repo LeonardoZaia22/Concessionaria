@@ -6,20 +6,10 @@
     <title>Login - Classic Motors</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="login-page">
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <a href="index.php">Classic Motors</a>
-                </div>
-                <div class="nav-menu">
-                    <a href="index.php" class="nav-link">Início</a>
-                </div>
-            </div>
-        </nav>
-    </header>
+
+    <?php
+    include_once 'includes/header.php';
+    ?>
 
     <?php if(isset($_GET['conta_excluida'])): ?>
     <div class="alert alert-success" style="margin: 20px auto; max-width: 450px; text-align: center;">
@@ -58,10 +48,8 @@
         </div>
     </main>
 
-    <footer class="login-footer-page">
-        <div class="container">
-            <p>&copy; 2025 Classic Motors. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+    <?php
+    include_once 'includes/footer.php';
+    ?>
 </body>
 </html>

@@ -357,21 +357,9 @@ $carros = $pdo->query("SELECT * FROM carros WHERE ativo = 1 ORDER BY id DESC")->
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <a href="restrita.php">Classic Motors</a>
-                </div>
-                <div class="nav-menu">
-                    <a href="restrita.php" class="nav-link">Início</a>
-                    <a href="admin_carros.php" class="nav-link active">Gerenciar Carros</a>
-                    <a href="painel.php" class="nav-link">Meu Perfil</a>
-                    <a href="logout.php" class="nav-link logout-btn">Sair</a>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <?php
+    include_once 'includes/header2.php';
+    ?>
 
     <main>
         <section class="painel-section">

@@ -6,11 +6,12 @@
     <title>Classic Motors - Concessionária de Carros Antigos</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="img/logo4.ico" >
 </head>
 <body>
 
     <?php
-    include_once 'header.php';
+    include_once 'includes/header.php';
     ?>
 
     <?php if(isset($_GET['conta_excluida'])): ?>
@@ -53,7 +54,7 @@
                         </ul>
                     </div>
                     <div class="about-image">
-                        <img src="img/img02.jpg" alt="Oficina de restauração">
+                        <img src="img/img07.jpg" alt="Oficina de restauração">
                     </div>
                 </div>
             </div>
@@ -102,7 +103,7 @@
     </main>
 
     <?php
-    include_once 'footer.php';
+    include_once 'includes/footer.php';
     ?>
 
     <script src="js/script.js"></script>

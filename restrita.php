@@ -142,7 +142,7 @@ foreach($carros as $carro) {
 </head>
 <body>
     <?php
-    include_once 'header2.php';
+    include_once 'includes/header2.php';
     ?>
 
     <main>
@@ -241,7 +241,7 @@ foreach($carros as $carro) {
     </div>
 
     <?php
-    include_once 'footer.php';
+    include_once 'includes/footer.php';
     ?>
 
     <script>
