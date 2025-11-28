@@ -716,3 +716,42 @@ h2 {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
+/* Melhorias para placeholders de imagem */
+.image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border-radius: 5px;
+    font-style: italic;
+}
+
+.car-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: var(--bg-dark);
+}
+
+.car-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+/* Garantir que as imagens sejam exibidas corretamente */
+.car-card img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Loading state para imagens */
+.car-image img[src=""], 
+.car-image img:not([src]) {
+    display: none;
+}

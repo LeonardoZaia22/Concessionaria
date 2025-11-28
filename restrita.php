@@ -7,6 +7,7 @@ if((!isset($_SESSION['id'])) and (!isset($_SESSION['email'])) and (!isset($_SESS
 }
 
 include_once 'conexao.php';
+include_once 'config_imagens.php'; // ADICIONEI ESTA LINHA
 
 // Buscar TODOS os carros ativos
 $consulta_carros = "SELECT * FROM carros WHERE ativo = 1 ORDER BY destaque DESC, id DESC";
@@ -163,16 +164,14 @@ foreach($carros as $carro) {
                 <h2>Nosso Acervo Completo</h2>
                 <div class="car-grid">
                     <?php foreach($carros as $carro): ?>
-                    <?php $fotos = $fotos_por_carro[$carro['id']] ?? []; ?>
+                    <?php 
+                    $fotos = $fotos_por_carro[$carro['id']] ?? [];
+                    // LINHA SIMPLES PARA PEGAR A IMAGEM CORRETA
+                    $imagem_principal = getImagemCarro($carro['modelo'], $carro['marca']);
+                    ?>
                     <div class="car-card" onclick="abrirDetalhes(<?php echo $carro['id']; ?>)">
                         <div class="car-image">
-                            <?php if(file_exists('img/' . $carro['imagem'])): ?>
-                                <img src="img/<?php echo $carro['imagem']; ?>" alt="<?php echo htmlspecialchars($carro['modelo']); ?>">
-                            <?php else: ?>
-                                <div class="image-placeholder">
-                                    Imagem não disponível
-                                </div>
-                            <?php endif; ?>
+                            <img src="img/<?php echo $imagem_principal; ?>" alt="<?php echo htmlspecialchars($carro['marca'] . ' ' . $carro['modelo']); ?>">
                             <?php if($carro['destaque']): ?>
                                 <span class="destaque-badge">Destaque</span>
                             <?php endif; ?>
@@ -248,6 +247,10 @@ foreach($carros as $carro) {
         // Dados dos carros em formato JavaScript
         const carrosData = {
             <?php foreach($carros as $carro): ?>
+            <?php 
+            $fotos = $fotos_por_carro[$carro['id']] ?? [];
+            $imagem_principal = getImagemCarro($carro['modelo'], $carro['marca']);
+            ?>
             <?php echo $carro['id']; ?>: {
                 id: <?php echo $carro['id']; ?>,
                 marca: "<?php echo htmlspecialchars($carro['marca']); ?>",
@@ -255,19 +258,16 @@ foreach($carros as $carro) {
                 ano: <?php echo $carro['ano']; ?>,
                 preco: "<?php echo number_format($carro['preco'], 2, ',', '.'); ?>",
                 descricao: `<?php echo addslashes($carro['descricao']); ?>`,
-                imagem: "<?php echo $carro['imagem']; ?>",
+                imagem: "<?php echo $imagem_principal; ?>",
                 destaque: <?php echo $carro['destaque'] ? 'true' : 'false'; ?>,
                 quilometragem: <?php echo $carro['quilometragem'] ?? 'null'; ?>,
                 combustivel: "<?php echo htmlspecialchars($carro['combustivel']); ?>",
                 cambio: "<?php echo htmlspecialchars($carro['cambio']); ?>",
                 cor: "<?php echo htmlspecialchars($carro['cor']); ?>",
-                final_placa: <?php echo $carro['final_placa'] ?? 'null'; ?>,
+                final_placa: <?php echo $carro['final_placa'] ? "'" . $carro['final_placa'] . "'" : 'null'; ?>,
                 detalhes: `<?php echo addslashes($carro['detalhes'] ?? ''); ?>`,
                 fotos: [
-                    <?php 
-                    $fotos = $fotos_por_carro[$carro['id']] ?? [];
-                    foreach($fotos as $foto): 
-                    ?>
+                    <?php foreach($fotos as $foto): ?>
                     {
                         id: <?php echo $foto['id']; ?>,
                         nome: "<?php echo $foto['foto_nome']; ?>"
@@ -295,7 +295,7 @@ foreach($carros as $carro) {
                 carro.fotos.forEach((foto, index) => {
                     fotosHTML += `
                         <div class="gallery-item" onclick="abrirModal('img/carros/${foto.nome}')">
-                            <img src="img/carros/${foto.nome}" alt="Foto adicional ${index + 1}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'height: 80px; display: flex; align-items: center; justify-content: center; background: var(--bg-dark); color: var(--text-muted);\\'>Sem imagem</div>';">
+                            <img src="img/carros/${foto.nome}" alt="Foto adicional ${index + 1}">
                             <div style="text-align: center; margin-top: 5px; font-size: 0.8em;">Foto ${index + 1}</div>
                         </div>
                     `;
@@ -317,7 +317,7 @@ foreach($carros as $carro) {
                             <div class="car-gallery">
                                 <!-- Imagem Principal -->
                                 <div class="gallery-item" onclick="abrirModal('img/${carro.imagem}')">
-                                    <img src="img/${carro.imagem}" alt="Imagem principal" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'height: 80px; display: flex; align-items: center; justify-content: center; background: var(--bg-dark); color: var(--text-muted);\\'>Sem imagem</div>';">
+                                    <img src="img/${carro.imagem}" alt="Imagem principal">
                                     <div style="text-align: center; margin-top: 5px; font-size: 0.8em;">Principal</div>
                                 </div>
                                 ${fotosHTML}
@@ -392,7 +392,7 @@ foreach($carros as $carro) {
             modal.style.display = 'block';
             modal.innerHTML = `
                 <span class="close" onclick="this.parentElement.style.display='none'">&times;</span>
-                <img class="modal-content" src="${src}" alt="Imagem ampliada" onerror="this.style.display='none'; this.parentElement.querySelector('.close').style.display='none';">
+                <img class="modal-content" src="${src}" alt="Imagem ampliada">
             `;
             document.body.appendChild(modal);
             

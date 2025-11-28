@@ -6,6 +6,8 @@
     <title>Login - Classic Motors</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
 
     <?php
     include_once 'includes/header.php';
@@ -13,9 +15,9 @@
 
     <?php if(isset($_GET['conta_excluida'])): ?>
     <div class="alert alert-success" style="margin: 20px auto; max-width: 450px; text-align: center;">
-         Sua conta foi excluída com sucesso. Sentiremos sua falta!
+        Sua conta foi excluída com sucesso. Sentiremos sua falta!
     </div>
-<?php endif; ?>
+    <?php endif; ?>
 
     <main class="login-container">
         <div class="login-form-container">
@@ -25,6 +27,12 @@
             <?php if(isset($_GET['erro'])): ?>
                 <div class="alert alert-success" style="background-color: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);">
                     E-mail ou senha incorretos!
+                </div>
+            <?php endif; ?>
+            
+            <?php if(isset($_GET['sucesso'])): ?>
+                <div class="alert alert-success">
+                    Conta criada com sucesso! Faça login para continuar.
                 </div>
             <?php endif; ?>
             

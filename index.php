@@ -18,7 +18,7 @@
     <div class="alert alert-success" style="margin: 20px auto; max-width: 1200px; text-align: center;">
         ✅ Sua conta foi excluída com sucesso. Sentiremos sua falta!
     </div>
-<?php endif; ?>
+    <?php endif; ?>
 
     <main>
         <section class="hero">
@@ -33,7 +33,8 @@
             <div class="hero-image">
                 <div class="car-slider">
                     <div class="car-slide active">
-                        <img src="img/img05.jpg" alt="Carro clássico">
+                        <img src="img/ford_maverick_gt_1974_principal.jpg" alt="Ford Maverick GT 1974" 
+                             onerror="this.src='img/GT1.jpeg';">
                     </div>
                 </div>
             </div>
@@ -54,7 +55,8 @@
                         </ul>
                     </div>
                     <div class="about-image">
-                        <img src="img/img07.jpg" alt="Oficina de restauração">
+                        <img src="img/GT1.jpeg" alt="Oficina de restauração" 
+                             onerror="this.src='img/ford_maverick_gt_1974_principal.jpg';">
                     </div>
                 </div>
             </div>
@@ -66,7 +68,8 @@
                 <div class="car-grid">
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="img/img03.jpg" alt="Fusca">
+                            <img src="img/fus1.jpeg" alt="Fusca" 
+                                 onerror="this.src='img/ford_maverick_gt_1974_principal.jpg';">
                         </div>
                         <div class="car-info">
                             <h3>Volkswagen Fusca 1975</h3>
@@ -76,17 +79,19 @@
                     </div>
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="img/img04.jpg" alt="Opala">
+                            <img src="img/che1.jpeg" alt="Chevette" 
+                                 onerror="this.src='img/ford_maverick_gt_1974_principal.jpg';">
                         </div>
                         <div class="car-info">
-                            <h3>Chevrolet Opala 1982</h3>
-                            <p class="car-price">R$ 65.000,00</p>
-                            <p class="car-description">Opala Comodoro 4.1. Carro com pintura original e interior em couro.</p>
+                            <h3>Chevrolet Chevette 1985</h3>
+                            <p class="car-price">R$ 35.000,00</p>
+                            <p class="car-description">Chevette Hatch SL. Carro conservado e com documentação em dia.</p>
                         </div>
                     </div>
                     <div class="car-card">
                         <div class="car-image">
-                            <img src="img/img05.jpg" alt="Maverick">
+                            <img src="img/ford_maverick_gt_1974_principal.jpg" alt="Maverick" 
+                                 onerror="this.src='img/GT1.jpeg';">
                         </div>
                         <div class="car-info">
                             <h3>Ford Maverick 1974</h3>

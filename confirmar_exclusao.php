@@ -102,7 +102,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <?php
-    include_once 'header2.php';
+    // CORREÇÃO: header2.php está na pasta includes/
+    include_once 'includes/header2.php';
     ?>
 
     <main>
@@ -115,7 +116,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <a href="painel.php" class="btn-secondary">Voltar ao Painel</a>
                     <?php else: ?>
-                        <div class="warning-icon"></div>
+                        <div class="warning-icon">⚠️</div>
                         <h1 style="color: var(--danger-color);">Confirmar Exclusão de Conta</h1>
                         
                         <div style="background: rgba(220, 53, 69, 0.1); padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -146,7 +147,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                             
                             <div>
                                 <button type="submit" name="confirmar_exclusao" class="btn-danger" onclick="return confirm('CONFIRMAÇÃO FINAL: Tem ABSOLUTA certeza que deseja EXCLUIR SUA CONTA PERMANENTEMENTE?')">
-                                     SIM, EXCLUIR MINHA CONTA
+                                    SIM, EXCLUIR MINHA CONTA
                                 </button>
                                 <button type="submit" name="cancelar" class="btn-secondary">
                                     Cancelar e Voltar
@@ -160,7 +161,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     </main>
 
     <?php
-    include_once 'footer.php';
+    // CORREÇÃO: footer.php está na pasta includes/
+    include_once 'includes/footer.php';
     ?>
 </body>
 </html>

@@ -9,7 +9,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $senha = $_POST['senha'];
     $telefone = $_POST['telefone'] ?? '';
     $endereco = $_POST['endereco'] ?? '';
-    $hash = password_hash($senha, PASSWORD_BCRYPT);
     
     // Verificar se email já existe
     $verificar_email = "SELECT id FROM usuarios WHERE email = :email";
@@ -20,12 +19,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if($stmt_verificar->rowCount() > 0) {
         $erro = "Este e-mail já está cadastrado.";
     } else {
-        // Inserir novo usuário (senha sem criptografia para compatibilidade)
+        // Inserir novo usuário (senha sem criptografia)
         $inserir_usuario = "INSERT INTO usuarios (nome, email, senha, telefone, endereco, nivel) 
-            $sql = "INSERT INTO usuarios (usuario, senha) VALUES (?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ss", $usuario, $hash);
-        VALUES (:nome, :email, :senha, :telefone, :endereco, 'user')";
+                           VALUES (:nome, :email, :senha, :telefone, :endereco, 'user')";
         $stmt_inserir = $pdo->prepare($inserir_usuario);
         $stmt_inserir->bindParam(':nome', $nome);
         $stmt_inserir->bindParam(':email', $email);

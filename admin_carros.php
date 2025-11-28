@@ -33,7 +33,7 @@ if(isset($_POST['adicionar_carro'])) {
     $destaque = isset($_POST['destaque']) ? 1 : 0;
     
     // Upload da imagem principal
-    $imagem_nome = 'img05.jpg';
+    $imagem_nome = 'ford_maverick_gt_1974_principal.jpg'; // IMAGEM PADRÃO CORRIGIDA
     if(isset($_FILES['imagem_principal']) && $_FILES['imagem_principal']['error'] === 0) {
         $extensao = pathinfo($_FILES['imagem_principal']['name'], PATHINFO_EXTENSION);
         $imagem_nome = strtolower(str_replace(' ', '_', $marca . '_' . $modelo . '_' . $ano)) . '_principal.' . $extensao;
@@ -111,7 +111,7 @@ if(isset($_POST['editar_carro'])) {
     
     // Upload da nova imagem principal
     if(isset($_FILES['imagem_principal']) && $_FILES['imagem_principal']['error'] === 0) {
-        if($imagem_nome !== 'img05.jpg' && file_exists('img/' . $imagem_nome)) {
+        if($imagem_nome !== 'ford_maverick_gt_1974_principal.jpg' && file_exists('img/' . $imagem_nome)) {
             unlink('img/' . $imagem_nome);
         }
         
@@ -182,7 +182,7 @@ if(isset($_GET['excluir'])) {
     $stmt_carro->execute([':id' => $id]);
     $carro = $stmt_carro->fetch();
     
-    if($carro['imagem'] !== 'img05.jpg' && file_exists('img/' . $carro['imagem'])) {
+    if($carro['imagem'] !== 'ford_maverick_gt_1974_principal.jpg' && file_exists('img/' . $carro['imagem'])) {
         unlink('img/' . $carro['imagem']);
     }
     
